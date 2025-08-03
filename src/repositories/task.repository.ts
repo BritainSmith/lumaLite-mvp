@@ -1,14 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TaskEntry } from "../entities/taskEntry";
 
 @Injectable()
 export class TaskRepository {
+  private readonly logger = new Logger(TaskRepository.name);
+
   constructor(
     @InjectRepository(TaskEntry)
     private taskRepository: Repository<TaskEntry>
-  ) {}
+  ) {
+    this.logger.log('TaskRepository initialized');
+  }
 
   async createTaskEntry(data: {
     type: string;
@@ -17,10 +21,20 @@ export class TaskRepository {
     ideas: string[];
     random: string[];
   }) {
-    const entry = this.taskRepository.create({
-      ...data,
-    });
-    return await this.taskRepository.save(entry);
+    this.logger.debug(`Creating task entry with type: ${data.type}`);
+    
+    try {
+      const entry = this.taskRepository.create({
+        ...data,
+      });
+      const savedEntry = await this.taskRepository.save(entry);
+      
+      this.logger.debug(`Task entry created successfully with ID: ${savedEntry.id}`);
+      return savedEntry;
+    } catch (error) {
+      this.logger.error(`Failed to create task entry: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 
   async getAllEntries() {

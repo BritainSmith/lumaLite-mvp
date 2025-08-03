@@ -1,12 +1,18 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { CompanionAgentService } from './services/companionAgent.service';
+import { Logger } from '@nestjs/common';
 import * as readlineSync from "readline-sync";
 import chalk from "chalk";
 
 async function bootstrap() {
+  const logger = new Logger('LumaLite');
+  logger.log('Starting LumaLite application...');
+  
   const app = await NestFactory.createApplicationContext(AppModule);
   const companionService = app.get(CompanionAgentService);
+  
+  logger.log('Application initialized successfully');
 
   console.clear();
   console.log(chalk.cyanBright.bold("\n🌟 Welcome to LumaLite – Your Supportive AI Companion 🌟\n"));
@@ -24,6 +30,7 @@ async function bootstrap() {
     
     switch (index) {
       case 0: { // Emotional Check-In
+        logger.log('User selected: Emotional Check-In');
         const input = readlineSync.question(chalk.yellowBright("\nHow are you feeling right now?\n> "));
         const response = await companionService.handleCheckIn(input);
         console.log(chalk.blueBright("\n💬 LumaLite says:"));
@@ -32,6 +39,7 @@ async function bootstrap() {
       }
 
       case 1: { // Organize Brain Dump
+        logger.log('User selected: Organize Brain Dump');
         const dump = readlineSync.question(chalk.yellowBright("\nWhat's on your mind? Just let it all out:\n> "));
         const result = await companionService.sortBrainDump(dump);
         console.log(chalk.magentaBright("\n🧠 Organized Thoughts:"));
@@ -41,13 +49,16 @@ async function bootstrap() {
 
       case 2: // Exit
       default:
+        logger.log('User selected: Exit');
         exit = true;
         console.log(chalk.cyanBright("\nTake care, Brit. Come back when you're ready 🌼\n"));
         break;
     }
   }
 
+  logger.log('Shutting down LumaLite application...');
   await app.close();
+  logger.log('Application shutdown complete');
 }
 
 bootstrap(); 
