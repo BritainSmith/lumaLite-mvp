@@ -51,7 +51,7 @@ describe('CompanionAgentService', () => {
       const userInput = 'I am feeling anxious today';
       const mockResponse = {
         text: 'I understand you are feeling anxious. Let me help you through this.',
-      };
+      } as any;
 
       mockChatOpenAI.invoke.mockResolvedValue(mockResponse);
 
@@ -76,7 +76,7 @@ describe('CompanionAgentService', () => {
       const userInput = 'I am feeling anxious today';
       const mockResponse = {
         text: 'I understand you are feeling anxious. Let me help you through this.',
-      };
+      } as any;
 
       mockChatOpenAI.invoke.mockResolvedValue(mockResponse);
       const logSpy = jest.spyOn(service['logger'], 'log');
@@ -97,7 +97,7 @@ describe('CompanionAgentService', () => {
       const userInput = 'I need to buy groceries, I have a meeting tomorrow, and I want to learn guitar';
       const mockResponse = {
         text: '{"tasks": ["buy groceries", "prepare for meeting"], "worries": [], "ideas": ["learn guitar"], "random": []}',
-      };
+      } as any;
 
       mockChatOpenAI.invoke.mockResolvedValue(mockResponse);
       (brainDumpService.saveSortedDump as jest.Mock).mockResolvedValue({ id: 1 });
@@ -125,7 +125,7 @@ describe('CompanionAgentService', () => {
       const userInput = 'I need to buy groceries';
       const mockResponse = {
         text: 'Invalid JSON response',
-      };
+      } as any;
 
       mockChatOpenAI.invoke.mockResolvedValue(mockResponse);
 
@@ -150,7 +150,7 @@ describe('CompanionAgentService', () => {
       const userInput = 'I need to buy groceries';
       const mockResponse = {
         text: '{"tasks": ["buy groceries"], "worries": [], "ideas": [], "random": []}',
-      };
+      } as any;
 
       mockChatOpenAI.invoke.mockResolvedValue(mockResponse);
       (brainDumpService.saveSortedDump as jest.Mock).mockResolvedValue({ id: 1 });
